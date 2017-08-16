@@ -93,6 +93,7 @@ func (h *Hub) userOk(Id int) (u *user, err error) {
 	}
 	return u, nil
 }
+
 /*
 func (h *Hub) NL(u *user, q0, q1 int64, n int, p []byte) wire.Data{
 	var reverse bool
