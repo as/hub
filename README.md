@@ -8,9 +8,9 @@ This package is still in its experimental state. To see a demonstration of curre
 
 ```
 cd github.com/as/hub/example
-example.exe localhost:8888 example.go &
+./example localhost:8888 example.go &
 cd ../client/example
-example.exe localhost:8888 &
-example.exe localhost:8888 &
-example.exe localhost:8888 &
+./example localhost:8888 &
+./example localhost:8888 &
+./example localhost:8888 &
 ```
