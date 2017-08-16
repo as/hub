@@ -1,14 +1,7 @@
 package main
 
 import (
-	"image"
-	"image/color"
-	"image/draw"
-	"log"
-	"math/rand"
-	"strconv"
-	"time"
-
+	"github.com/as/event"
 	"github.com/as/frame"
 	"github.com/as/hub/client"
 	kbd "github.com/as/text/kbd"
@@ -20,6 +13,14 @@ import (
 	"golang.org/x/mobile/event/lifecycle"
 	"golang.org/x/mobile/event/mouse"
 	"golang.org/x/mobile/event/paint"
+	"image"
+	"image/color"
+	"image/draw"
+	"log"
+	"math/rand"
+	"os"
+	"strconv"
+	"time"
 )
 
 var (
@@ -44,6 +45,9 @@ func init() {
 }
 
 func main() {
+	if len(os.Args) < 2 {
+		log.Fatalln("usage: example host:port")
+	}
 	driver.Main(func(src screen.Screen) {
 		wind, _ := src.NewWindow(&screen.NewWindowOptions{winSize.X, winSize.Y, "Win"})
 		pad := image.Pt(fontdy, fontdy)
@@ -61,7 +65,7 @@ func main() {
 
 		col := frame.Acme
 		col.Hi.Back = image.NewUniform(color.RGBA{0x99, 0xDD, 0x99, 192})
-		c2 := client.Dial(rand.Int(), col, w.Frame, "tcp", "localhost:555")
+		c2 := client.DialEvent(rand.Int(), w.Frame, wind, "tcp", os.Args[1])
 		if c2 == nil {
 			log.Fatalln("cant connect")
 		}
@@ -79,7 +83,6 @@ func main() {
 			}
 		}
 		for {
-
 			switch e := wind.NextEvent().(type) {
 			case mouse.Event:
 				e.X -= float32(sp.X)
@@ -93,6 +96,16 @@ func main() {
 						break DrainLoop
 					}
 				}
+			case event.Event:
+				switch e := e.(type) {
+				case event.Insert:
+					c2.FrameInsert(e.ID, e.P, e.Q0, e.Q1)
+				case event.Delete:
+					c2.FrameDelete(e.ID, e.Q0, e.Q1)
+				case event.Select:
+					c2.FrameSelect(e.ID, e.Q0, e.Q1)
+				}
+				ckRedraw()
 			case mous.SweepEvent:
 				s, q0, q1 = mous.Sweep(w, e, pad.Y, s, q0, q1, wind)
 				if e.Button == 1 {
@@ -125,7 +138,7 @@ func main() {
 				if e.Direction == 2 {
 					continue
 				}
-				kbd.SendClient(c2, e)
+				kbd.Send(c2, e)
 				ckRedraw()
 			case paint.Event:
 				c2.Upload(wind, b, sp)

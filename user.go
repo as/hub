@@ -93,3 +93,24 @@ func (h *Hub) userOk(Id int) (u *user, err error) {
 	}
 	return u, nil
 }
+/*
+func (h *Hub) NL(u *user, q0, q1 int64, n int, p []byte) wire.Data{
+	var reverse bool
+	if q1 < q0{
+		reverse = true
+		q0,q1 = q1,q0
+	}
+	if q0 < 0{
+		return wire.Data{Err: "q0 < 0"}
+	}
+	if q1 >= len(h.Buffer.Len()){
+		return wire.Data{Err: "q0 >= 0"}
+	}
+	if reverse{
+		r = rev.NewReader(h.Buffer.Bytes())
+	} else {
+		r = bytes.NewReader(h.Buffer.Bytes())
+	}
+	bytes.Index(s, p []byte)
+}
+*/

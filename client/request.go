@@ -5,41 +5,41 @@ import (
 	"image"
 	"io"
 	"io/ioutil"
-	"log"
+//	"log"
 
 	"github.com/as/hub/wire"
 	"github.com/as/text"
 )
 
 func (c *User) SetOrigin(org int64, exact bool) {
-	log.Printf("SetOrigin 1 %d %b\n", org, exact)
-	log.Printf("SetOrigin 2 %d %b\n", org, exact)
-	log.Printf("SetOrigin 3 %d %b\n", org, exact)
+	//log.Printf("SetOrigin 1 %d %b\n", org, exact)
+	//log.Printf("SetOrigin 2 %d %b\n", org, exact)
+	//log.Printf("SetOrigin 3 %d %b\n", org, exact)
 
-	log.Printf("SetOrigin %d %b\n", org, exact)
+	//log.Printf("SetOrigin %d %b\n", org, exact)
 	if !exact {
-		log.Printf("read bytes")
+		//log.Printf("read bytes")
 		Data, _ := bufio.NewReader(io.NewSectionReader(c, org, org+512)).ReadBytes('\n')
-		log.Printf("read bytes done")
+		//log.Printf("read bytes done")
 		org += int64(len(Data))
 	}
-	log.Printf("setOrigin %d %b\n", clamp(org, 0, c.Len()), exact)
+	//log.Printf("setOrigin %d %b\n", clamp(org, 0, c.Len()), exact)
 	c.setOrigin(clamp(org, 0, c.Len()))
-	log.Printf("leave  SetOrigin %d %b\n", org, exact)
+	//log.Printf("leave  SetOrigin %d %b\n", org, exact)
 }
 func (c *User) setOrigin(org int64) {
-	log.Printf("setorigin %d\n", org)
+	//log.Printf("setorigin %d\n", org)
 	fl := c.fr.Len()
 	switch text.Region5(org, org+fl, c.org, c.org+fl) {
 	case -1:
 		////c.frInsert(c.Bytes()[org:org+(c.org-org)], 0)
 		data, err := ioutil.ReadAll(io.NewSectionReader(c, org, c.org))
 		if err != nil {
-			log.Printf("setOrigin: %s\n", err)
+			//log.Printf("setOrigin: %s\n", err)
 		}
-		log.Printf("frInsert: %s\n", data)
+		//log.Printf("frInsert: %s\n", data)
 		c.frInsert(data, 0)
-		log.Printf("frInsert done: %s\n", data)
+		//log.Printf("frInsert done: %s\n", data)
 		c.org = org
 	case -2, 2:
 		c.frDelete(0, c.fr.Len())
@@ -57,7 +57,7 @@ func (c *User) setOrigin(org int64) {
 		c.frPaint(pt, fr.Max, c.fr.Color.Palette.Back)
 	}
 	Q0, Q1 := c.Dot()
-	log.Printf("c.Select %d:%d\n", Q0, Q1)
+	//log.Printf("c.Select %d:%d\n", Q0, Q1)
 	c.Select(Q0, Q1)
 }
 
@@ -74,7 +74,7 @@ func (c *User) Who() {
 		if ui.Id == -1 {
 			break
 		}
-		//	log.Printf("userinfo: %#v\n", ui)
+		//	//log.Printf("userinfo: %#v\n", ui)
 		c.knows[v.N] = ui
 	}
 }
@@ -95,7 +95,7 @@ func (c *User) asker() {
 				go fn(rep)
 				delete(c.replyfns, rep.RcId)
 			} else {
-				log.Printf("no fn for reply #%d\n", rep.RcId)
+				//log.Printf("no fn for reply #%d\n", rep.RcId)
 			}
 		}
 	}
@@ -122,19 +122,19 @@ func (c *User) Mark(Q0 int64) {
 			Q0: Q0,
 		},
 	})
-	log.Println("waiting for reply on rc")
+	//log.Println("waiting for reply on rc")
 	<-rc
 	return
 }
 func (c *User) Read(p []byte) (n int, err error) {
-	log.Println("Read: waiting for reply on rc")
+	//log.Println("Read: waiting for reply on rc")
 	rc := c.writeRequest(&wire.Packet{
 		Kind: 'r',
 		Data: wire.Data{
 			P: p,
 		},
 	})
-	log.Println("Read: waiting for reply on rc")
+	//log.Println("Read: waiting for reply on rc")
 	r := <-rc
 	copy(p, r.P)
 	return r.N, wire.StrToErr(r.Err)
@@ -165,9 +165,9 @@ func (c *User) Insert(p []byte, Q0 int64) (n int) {
 		},
 		RcId: 2,
 	})
-	//	log.Println("insert: waiting for reply on rc")
+	//	//log.Println("insert: waiting for reply on rc")
 	r := <-rc
-	//	log.Println("insert: got reply")
+	//	//log.Println("insert: got reply")
 	return r.N
 }
 func (c *User) Select(Q0, Q1 int64) {
@@ -180,17 +180,17 @@ func (c *User) Select(Q0, Q1 int64) {
 		},
 		RcId: 2,
 	})
-	//	log.Println("select: waiting for reply on rc")
+	//	//log.Println("select: waiting for reply on rc")
 	<-rc
-	//	log.Println("select: got reply")
+	//	//log.Println("select: got reply")
 }
 func (c *User) Dot() (Q0, Q1 int64) {
 	rc := c.writeRequest(&wire.Packet{
 		Kind: '.',
 	})
-	//	log.Println("dot: waiting for reply on rc")
+	//	//log.Println("dot: waiting for reply on rc")
 	r := <-rc
-	//	log.Println("dot: got reply")
+	//	//log.Println("dot: got reply")
 	return r.Q0, r.Q1
 }
 func (c *User) Bytes() (p []byte) {
@@ -198,9 +198,9 @@ func (c *User) Bytes() (p []byte) {
 		Kind: 'b',
 		Data: wire.Data{},
 	})
-	//	log.Println("byte: waiting for reply on rc")
+	//	//log.Println("byte: waiting for reply on rc")
 	r := <-rc
-	//	log.Println("byte: got reply")
+	//	//log.Println("byte: got reply")
 	return r.P
 }
 
@@ -212,18 +212,18 @@ func (c *User) Delete(Q0, Q1 int64) (n int) {
 			Q1: Q1,
 		},
 	})
-	//	log.Println("delete: waiting for reply on rc")
+	//	//log.Println("delete: waiting for reply on rc")
 	r := <-rc
-	//	log.Println("delete: got reply")
+	//	//log.Println("delete: got reply")
 	return r.N
 }
 func (c *User) Len() (n int64) {
 	rc := c.writeRequest(&wire.Packet{
 		Kind: 'l',
 	})
-	log.Println("len: waiting for reply on rc")
+	//log.Println("len: waiting for reply on rc")
 	r := <-rc
-	log.Println("len: got reply")
+	//log.Println("len: got reply")
 	return int64(r.N)
 }
 func (c *User) Fill() {

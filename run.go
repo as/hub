@@ -1,7 +1,7 @@
 package hub
 
 import (
-	"log"
+	//"log"
 
 	"github.com/as/hub/wire"
 )
@@ -18,7 +18,7 @@ func (h *Hub) broadcasts() {
 	for {
 		select {
 		case <-h.teardown:
-			log.Printf("stopping server...\n")
+			//log.Printf("stopping server...\n")
 			return
 		case e := <-h.broadcast:
 			for _, u := range h.Id {
@@ -32,7 +32,7 @@ func (h *Hub) broadcasts() {
 
 // ReplyTo sends a packet on the users allocated reply channel
 func (h *Hub) ReplyTo(u *user, RcId int, p *wire.Packet) (err error) {
-	log.Printf("sending reply to %d: %s\n", u.Id, p)
+	//log.Printf("sending reply to %d: %s\n", u.Id, p)
 	p.RcId = RcId
 	u.rc <- *p
 	return nil
@@ -84,7 +84,7 @@ func (h *Hub) mux() {
 				r := wire.Data{N: int(h.Buffer.Len()), P: h.Buffer.Bytes()}
 				h.ReplyTo(u, e.RcId, &wire.Packet{Kind: e.Kind, Data: r})
 			case 'l':
-				log.Printf("length packet")
+				//log.Printf("length packet")
 				r := wire.Data{N: int(h.Buffer.Len())}
 				h.ReplyTo(u, e.RcId, &wire.Packet{Kind: e.Kind, Data: r})
 			case 'm':

@@ -1,7 +1,7 @@
 package client
 
 import (
-	"log"
+	//"log"
 
 	"github.com/as/frame"
 	"github.com/as/hub/wire"
@@ -28,18 +28,33 @@ type User struct {
 	knows     map[int]*userinfo
 	sem       chan bool
 	dirty     bool
+	text.Sender
 }
-
+/*
 func (c *User) lock()   { c.sem <- true }
 func (c *User) unlock() { <-c.sem }
+*/
+
+func (c *User) lock()   {}
+func (c *User) unlock() {}
+
+func (c *User) FrameDelete(id int, q0, q1 int64) int{
+	return c.frameDelete(q0, q1)
+}
+func (c *User) FrameInsert(id int, p []byte, q0, q1 int64) int{
+	return c.frameInsert(p, q0)
+}
+func (c *User) FrameSelect(id int, q0, q1 int64){
+	c.frameSelect(id, q0, q1)
+}
 
 func (c *User) frameDelete(Q0, Q1 int64) int {
-	log.Printf("in frameDelete\n")
+	//log.Printf("in frameDelete\n")
 	if Q1 < Q0 {
 		return 0
 	}
 	reg := text.Region5(Q0, Q1, c.org, c.org+c.fr.Len())
-	log.Printf("in region5: %d because Region5(%d,%d,%d,%d)\n", reg, c.org, c.org+c.fr.Len(), Q0, Q1)
+	//log.Printf("in region5: %d because Region5(%d,%d,%d,%d)\n", reg, c.org, c.org+c.fr.Len(), Q0, Q1)
 	switch reg {
 	case -2:
 		c.org -= Q1 - Q0
@@ -59,9 +74,9 @@ func (c *User) frameDelete(Q0, Q1 int64) int {
 	case 1:
 		c.frDelete(Q0-c.org, c.fr.Len())
 		c.Fill()
-		log.Printf("setorg done")
+		//log.Printf("setorg done")
 	}
-	log.Printf("ret: %d\n", int(Q1-Q0)+1)
+	//log.Printf("ret: %d\n", int(Q1-Q0)+1)
 	return int(Q1 - Q0)
 }
 
