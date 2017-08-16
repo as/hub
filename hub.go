@@ -1,4 +1,4 @@
-// Package hub provides a concurrent demultiplexer for text editing operations
+// Package hub provides a concurrent multiplexer on text editing operations
 // from multiple clients. To connect to a hub and make concurrent edits, see hub/client
 package hub
 
