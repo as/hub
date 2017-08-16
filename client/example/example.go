@@ -72,11 +72,11 @@ func main() {
 		)
 		mousein.Machine.SetRect(image.Rect(r.Min.X, r.Min.Y+pad.Y, r.Max.X, r.Max.Y-pad.Y))
 		redraw := false
-		ckRedraw := func(){
+		ckRedraw := func() {
 			if c2.Dirty() || redraw {
 				wind.Send(paint.Event{})
 				redraw = false
-			}		
+			}
 		}
 		for {
 

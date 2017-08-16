@@ -1,12 +1,12 @@
 package main
 
 import (
-	"io/ioutil"
-	"log"
-	"os"
 	"fmt"
 	"github.com/as/hub"
 	"github.com/as/text"
+	"io/ioutil"
+	"log"
+	"os"
 )
 
 func main() {
@@ -17,11 +17,11 @@ func main() {
 	buf := text.NewBuffer()
 	var (
 		data []byte
-		err error
+		err  error
 	)
-	for _, name := range []string{`\windows\system32\drivers\etc\hosts`, `/etc/hosts`, `/ndb/local`}{
+	for _, name := range []string{`\windows\system32\drivers\etc\hosts`, `/etc/hosts`, `/ndb/local`} {
 		data, err = ioutil.ReadFile(name)
-		if err == nil{
+		if err == nil {
 			break
 		}
 	}

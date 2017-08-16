@@ -17,12 +17,12 @@ type userinfo struct {
 type User struct {
 	Id        int
 	Q0, Q1    int64
-	askin       chan request
+	askin     chan request
 	ask       chan wire.Packet
-	replyc     chan wire.Packet
+	replyc    chan wire.Packet
 	broadcast chan wire.Packet
 	rc        chan wire.Packet
-	replyfns   map[int]replyfn
+	replyfns  map[int]replyfn
 	fr        *frame.Frame
 	org       int64
 	knows     map[int]*userinfo
@@ -39,18 +39,18 @@ func (c *User) frameDelete(Q0, Q1 int64) int {
 		return 0
 	}
 	reg := text.Region5(Q0, Q1, c.org, c.org+c.fr.Len())
-	log.Printf("in region5: %d because Region5(%d,%d,%d,%d)\n",reg, c.org, c.org+c.fr.Len(),Q0,Q1)
+	log.Printf("in region5: %d because Region5(%d,%d,%d,%d)\n", reg, c.org, c.org+c.fr.Len(), Q0, Q1)
 	switch reg {
 	case -2:
-		c.org -= Q1-Q0
+		c.org -= Q1 - Q0
 	case -1:
 		c.frDelete(0, c.org-Q1)
-		c.org=c.BackNL(Q0, 1)
+		c.org = c.BackNL(Q0, 1)
 		c.Fill()
 	case 0:
-		if Q0 < c.org{
+		if Q0 < c.org {
 			c.frDelete(0, c.fr.Len())
-			c.org=c.BackNL(Q0, 1)
+			c.org = c.BackNL(Q0, 1)
 			c.Fill()
 		} else {
 			c.frDelete(Q0-c.org, Q1-c.org)
@@ -62,7 +62,7 @@ func (c *User) frameDelete(Q0, Q1 int64) int {
 		log.Printf("setorg done")
 	}
 	log.Printf("ret: %d\n", int(Q1-Q0)+1)
-	return int(Q1-Q0)
+	return int(Q1 - Q0)
 }
 
 func (c *User) frameInsert(p []byte, Q0 int64) int {

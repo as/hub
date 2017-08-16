@@ -26,7 +26,7 @@ func (c *User) Upload(wind screen.Window, b screen.Buffer, sp image.Point) {
 }
 
 func (c *User) frInsert(p []byte, Q0 int64) int {
-	if len(p) == 0 || Q0 < 0 || Q0 > c.fr.Len(){
+	if len(p) == 0 || Q0 < 0 || Q0 > c.fr.Len() {
 		return 0
 	}
 	c.lock()

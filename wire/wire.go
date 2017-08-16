@@ -30,14 +30,14 @@ type Data struct {
 	P      []byte
 }
 
-func StrToErr(str string) error{
-	if str == ""{
+func StrToErr(str string) error {
+	if str == "" {
 		return nil
 	}
 	return fmt.Errorf("%s", str)
 }
-func Err(err error) string{
-	if err != nil{
+func Err(err error) string {
+	if err != nil {
 		return err.Error()
 	}
 	return ""

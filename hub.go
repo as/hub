@@ -3,8 +3,8 @@
 package hub
 
 import (
-	"github.com/as/text"
 	"github.com/as/hub/wire"
+	"github.com/as/text"
 )
 
 // Hub is a server for multi-editing text files

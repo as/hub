@@ -2,8 +2,8 @@ package hub
 
 import (
 	"encoding/gob"
-	"net"
 	"github.com/as/hub/wire"
+	"net"
 )
 
 // handle handles each client connection

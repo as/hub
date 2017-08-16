@@ -28,7 +28,7 @@ func (c *User) SetOrigin(org int64, exact bool) {
 	log.Printf("leave  SetOrigin %d %b\n", org, exact)
 }
 func (c *User) setOrigin(org int64) {
-		log.Printf("setorigin %d\n", org)
+	log.Printf("setorigin %d\n", org)
 	fl := c.fr.Len()
 	switch text.Region5(org, org+fl, c.org, c.org+fl) {
 	case -1:
@@ -37,9 +37,9 @@ func (c *User) setOrigin(org int64) {
 		if err != nil {
 			log.Printf("setOrigin: %s\n", err)
 		}
-			log.Printf("frInsert: %s\n", data)
+		log.Printf("frInsert: %s\n", data)
 		c.frInsert(data, 0)
-			log.Printf("frInsert done: %s\n", data)
+		log.Printf("frInsert done: %s\n", data)
 		c.org = org
 	case -2, 2:
 		c.frDelete(0, c.fr.Len())
@@ -79,19 +79,19 @@ func (c *User) Who() {
 	}
 }
 
-func (c *User) asker(){
+func (c *User) asker() {
 	ctr := 0
 	for {
-		select{
-		case ap := <- c.askin:
+		select {
+		case ap := <-c.askin:
 			ctr++
 			ap.RcId = ctr
-			c.replyfns[ctr] = replyfn(func(p wire.Packet){
+			c.replyfns[ctr] = replyfn(func(p wire.Packet) {
 				ap.rc <- p
 			})
 			c.ask <- ap.Packet
-		case rep := <- c.replyc:
-			if fn, ok := c.replyfns[rep.RcId]; ok{
+		case rep := <-c.replyc:
+			if fn, ok := c.replyfns[rep.RcId]; ok {
 				go fn(rep)
 				delete(c.replyfns, rep.RcId)
 			} else {
@@ -103,12 +103,12 @@ func (c *User) asker(){
 
 type replyfn func(p wire.Packet)
 
-type request struct{
+type request struct {
 	rc chan wire.Packet
 	wire.Packet
 }
 
-func (c *User) writeRequest(p *wire.Packet) (replyc chan wire.Packet){
+func (c *User) writeRequest(p *wire.Packet) (replyc chan wire.Packet) {
 	replyc = make(chan wire.Packet)
 	p.Id = c.Id
 	c.askin <- request{rc: replyc, Packet: *p}
@@ -134,7 +134,7 @@ func (c *User) Read(p []byte) (n int, err error) {
 			P: p,
 		},
 	})
-		log.Println("Read: waiting for reply on rc")
+	log.Println("Read: waiting for reply on rc")
 	r := <-rc
 	copy(p, r.P)
 	return r.N, wire.StrToErr(r.Err)
@@ -221,57 +221,56 @@ func (c *User) Len() (n int64) {
 	rc := c.writeRequest(&wire.Packet{
 		Kind: 'l',
 	})
-		log.Println("len: waiting for reply on rc")
+	log.Println("len: waiting for reply on rc")
 	r := <-rc
-		log.Println("len: got reply")
+	log.Println("len: got reply")
 	return int64(r.N)
 }
 func (c *User) Fill() {
 	/*
+		for !c.fr.Full() {
+			qep := c.org + c.fr.Len()
+			n := min(c.Len()-qep, 2500)
+			if n <= 0 {
+				break
+			}
+			rp := c.Bytes()[qep : qep+n]
+			nl := c.fr.MaxLine() - c.fr.Line()
+			m := 0
+			i := int64(0)
+			for i < n {
+				if rp[i] == '\n' {
+					m++
+					if m >= nl {
+						i++
+						break
+					}
+				}
+				i++
+			}
+			c.frInsert(rp[:i], c.fr.Len())
+			//		c.Mark()
+		}
+	*/
+	println("Fill")
+	if c.fr == nil {
+		return
+	}
 	for !c.fr.Full() {
-		qep := c.org + c.fr.Len()
+		qep := c.Origin() + c.fr.Len()
 		n := min(c.Len()-qep, 2500)
 		if n <= 0 {
 			break
 		}
-		rp := c.Bytes()[qep : qep+n]
-		nl := c.fr.MaxLine() - c.fr.Line()
-		m := 0
-		i := int64(0)
-		for i < n {
-			if rp[i] == '\n' {
-				m++
-				if m >= nl {
-					i++
-					break
-				}
-			}
-			i++
-		}
-		c.frInsert(rp[:i], c.fr.Len())
-		//		c.Mark()
-	}
-	*/
-		println("Fill")
-		if c.fr == nil{
-			return
-		}
-		for !c.fr.Full(){
-			qep := c.Origin()+c.fr.Len()
-			n := min(c.Len()-qep, 2500)
-			if n <= 0{
+		buf := bufio.NewReader(io.NewSectionReader(c, qep, qep+n))
+		for nl := c.fr.MaxLine() - c.fr.Line(); nl >= 0; nl-- {
+			line, err := buf.ReadBytes('\n')
+			c.frInsert(line, c.fr.Len())
+			if err != nil {
 				break
 			}
-			buf := bufio.NewReader(io.NewSectionReader(c, qep, qep+n))
-			for nl := c.fr.MaxLine()-c.fr.Line(); nl>=0; nl--{
-				line, err := buf.ReadBytes('\n')
-				c.frInsert(line, c.fr.Len())
-				if err != nil{
-					break
-				}
-			}
 		}
-
+	}
 
 }
 func (c *User) Origin() int64 {
