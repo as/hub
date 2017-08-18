@@ -13,6 +13,7 @@ import (
 	"golang.org/x/mobile/event/lifecycle"
 	"golang.org/x/mobile/event/mouse"
 	"golang.org/x/mobile/event/paint"
+	"github.com/as/frame/font"
 	"image"
 	"image/color"
 	"image/draw"
@@ -57,7 +58,7 @@ func main() {
 		}
 		wind.Upload(image.ZP, b, b.Bounds())
 		sp := image.ZP
-		w := win.New(sp, pad, b.RGBA(), frame.NewGoMono(fontdy))
+		w := win.New(sp, pad, b.RGBA(), font.NewGoMono(fontdy))
 		wind.Upload(sp, b, b.Bounds())
 		wind.Send(paint.Event{})
 
