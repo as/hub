@@ -31,7 +31,7 @@ func main() {
 	hub := hub.NewHub(buf)
 	hub.Run()
 	err = hub.ListenAndServe(a[1])
-	if err != nil{
+	if err != nil {
 		log.Fatalln(err)
 	}
 	select {}

@@ -30,6 +30,7 @@ type User struct {
 	dirty     bool
 	text.Sender
 }
+
 /*
 func (c *User) lock()   { c.sem <- true }
 func (c *User) unlock() { <-c.sem }
@@ -38,13 +39,13 @@ func (c *User) unlock() { <-c.sem }
 func (c *User) lock()   {}
 func (c *User) unlock() {}
 
-func (c *User) FrameDelete(id int, q0, q1 int64) int{
+func (c *User) FrameDelete(id int, q0, q1 int64) int {
 	return c.frameDelete(q0, q1)
 }
-func (c *User) FrameInsert(id int, p []byte, q0, q1 int64) int{
+func (c *User) FrameInsert(id int, p []byte, q0, q1 int64) int {
 	return c.frameInsert(p, q0)
 }
-func (c *User) FrameSelect(id int, q0, q1 int64){
+func (c *User) FrameSelect(id int, q0, q1 int64) {
 	c.frameSelect(id, q0, q1)
 }
 

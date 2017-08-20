@@ -10,7 +10,6 @@ import (
 	"github.com/as/hub/wire"
 )
 
-
 func Dial(Id int, col frame.Color, f *frame.Frame, network, address string) (c *User) {
 	conn, err := net.Dial(network, address)
 	if err != nil {
@@ -72,15 +71,15 @@ func Dial(Id int, col frame.Color, f *frame.Frame, network, address string) (c *
 				case 'i':
 					//////log.Printf("broadcast action: frameInsert")
 					//c.frameInsert(e.P, e.Q0)
-					c.Send(event.Insert{ID: e.Id, Q0: e.Q0, Q1: e.Q1, P: e.P})
+					c.Send(event.Insert{event.Rec{ID: e.Id, Q0: e.Q0, Q1: e.Q1, P: e.P}})
 				case 'd':
 					//////log.Printf("broadcast action: frameDelete")
 					//c.frameDelete(e.Q0, e.Q1)
-					c.Send(event.Delete{ID: e.Id, Q0: e.Q0, Q1: e.Q1})
+					c.Send(event.Delete{event.Rec{ID: e.Id, Q0: e.Q0, Q1: e.Q1}})
 				case 's':
 					//////log.Printf("broadcast action: frameSelect")
 					//c.frameSelect(e.Id, e.Q0, e.Q1)
-					c.Send(event.Select{ID: e.Id, Q0: e.Q0, Q1: e.Q1})
+					c.Send(event.Select{event.Rec{ID: e.Id, Q0: e.Q0, Q1: e.Q1}})
 				default:
 					////log.Printf("broadcast action: unknown: %s", e)
 				}

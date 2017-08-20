@@ -5,7 +5,7 @@ import (
 	"image"
 	"io"
 	"io/ioutil"
-//	"log"
+	//	"log"
 
 	"github.com/as/hub/wire"
 	"github.com/as/text"

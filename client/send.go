@@ -2,7 +2,7 @@ package client
 
 import (
 	"encoding/gob"
-//	"log"
+	//	"log"
 	"net"
 
 	"github.com/as/event"
@@ -32,7 +32,7 @@ func DialEvent(Id int, fr *frame.Frame, eventsink text.Sender, network, address 
 		sem:       make(chan bool, 1),
 		replyfns:  make(map[int]replyfn),
 		Sender:    eventsink,
-		fr: fr,	// TODO: Remove this
+		fr:        fr, // TODO: Remove this
 	}
 	c.knows[Id] = &userinfo{
 		Id:  Id,
@@ -75,15 +75,15 @@ func DialEvent(Id int, fr *frame.Frame, eventsink text.Sender, network, address 
 				case 'i':
 					////log.Printf("broadcast action: frameInsert")
 					//c.frameInsert(e.P, e.Q0)
-					c.Send(event.Insert{ID: e.Id, Q0: e.Q0, Q1: e.Q1, P: e.P})
+					c.Send(event.Insert{event.Rec{ID: e.Id, Q0: e.Q0, Q1: e.Q1, P: e.P}})
 				case 'd':
 					////log.Printf("broadcast action: frameDelete")
 					//c.frameDelete(e.Q0, e.Q1)
-					c.Send(event.Delete{ID: e.Id, Q0: e.Q0, Q1: e.Q1})
+					c.Send(event.Delete{event.Rec{ID: e.Id, Q0: e.Q0, Q1: e.Q1}})
 				case 's':
 					////log.Printf("broadcast action: frameSelect")
 					//c.frameSelect(e.Id, e.Q0, e.Q1)
-					c.Send(event.Select{ID: e.Id, Q0: e.Q0, Q1: e.Q1})
+					c.Send(event.Select{event.Rec{ID: e.Id, Q0: e.Q0, Q1: e.Q1}})
 				default:
 					//log.Printf("broadcast action: unknown: %s", e)
 				}
