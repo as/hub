@@ -3,7 +3,7 @@ package wire
 import (
 	"fmt"
 
-	"github.com/as/text"
+	"github.com/as/text/find"
 )
 
 const (
@@ -51,5 +51,5 @@ func (p Packet) String() string {
 func PacketOk(Kind byte) bool {
 	return true
 	var valIdKind = []byte("IdswrR.blmELOCS")
-	return text.Any(Kind, valIdKind) != -1
+	return find.Any(Kind, valIdKind) != -1
 }
