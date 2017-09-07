@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/as/event"
 	"github.com/as/frame"
+	"github.com/as/frame/font"
 	"github.com/as/hub/client"
 	kbd "github.com/as/text/kbd"
 	mous "github.com/as/text/mouse"
@@ -13,7 +14,6 @@ import (
 	"golang.org/x/mobile/event/lifecycle"
 	"golang.org/x/mobile/event/mouse"
 	"golang.org/x/mobile/event/paint"
-	"github.com/as/frame/font"
 	"image"
 	"image/color"
 	"image/draw"
@@ -21,6 +21,7 @@ import (
 	"math/rand"
 	"os"
 	"strconv"
+	"github.com/as/text"
 	"time"
 )
 
@@ -58,7 +59,8 @@ func main() {
 		}
 		wind.Upload(image.ZP, b, b.Bounds())
 		sp := image.ZP
-		w := win.New(sp, pad, b.RGBA(), font.NewGoMono(fontdy))
+		ed,_ := text.Open(text.NewBuffer())
+		w := win.New(sp, pad, b.RGBA(),ed, font.NewGoMono(fontdy))
 		wind.Upload(sp, b, b.Bounds())
 		wind.Send(paint.Event{})
 
@@ -139,7 +141,7 @@ func main() {
 				if e.Direction == 2 {
 					continue
 				}
-				kbd.Send(c2, e)
+				kbd.SendClient(c2, e)
 				ckRedraw()
 			case paint.Event:
 				c2.Upload(wind, b, sp)
