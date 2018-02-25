@@ -2,7 +2,6 @@ package client
 
 import (
 	"image"
-	"sync"
 
 	"github.com/as/frame"
 	"github.com/as/text"
@@ -12,17 +11,8 @@ import (
 func (c *User) Dirty() bool { return c.dirty || c.fr.Dirty() }
 
 func (c *User) Upload(wind screen.Window, b screen.Buffer, sp image.Point) {
-	var wg sync.WaitGroup
-	c.lock()
-	local := append([]image.Rectangle{}, c.fr.Cache()...)
-	c.fr.Flush()
-	c.unlock()
-	wg.Add(len(local))
-	for _, r := range local {
-		go func(r image.Rectangle) { wind.Upload(sp.Add(r.Min), b, r); wg.Done() }(r)
-	}
+	wind.Upload(sp, b, b.Bounds())
 	c.dirty = false
-	wg.Wait()
 }
 
 func (c *User) frInsert(p []byte, Q0 int64) int {

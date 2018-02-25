@@ -48,6 +48,9 @@ func (c *User) FrameInsert(id int, p []byte, q0, q1 int64) int {
 func (c *User) FrameSelect(id int, q0, q1 int64) {
 	c.frameSelect(id, q0, q1)
 }
+func (c *User) Close() error {
+	return nil
+}
 
 func (c *User) frameDelete(Q0, Q1 int64) int {
 	//log.Printf("in frameDelete\n")

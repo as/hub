@@ -1,10 +1,20 @@
 package main
 
 import (
+	"image"
+	"image/color"
+	"image/draw"
+	"log"
+	"math/rand"
+	"os"
+	"strconv"
+	"time"
+
 	"github.com/as/event"
+	"github.com/as/font"
 	"github.com/as/frame"
-	"github.com/as/frame/font"
 	"github.com/as/hub/client"
+	"github.com/as/text"
 	kbd "github.com/as/text/kbd"
 	mous "github.com/as/text/mouse"
 	"github.com/as/text/win"
@@ -14,15 +24,6 @@ import (
 	"golang.org/x/mobile/event/lifecycle"
 	"golang.org/x/mobile/event/mouse"
 	"golang.org/x/mobile/event/paint"
-	"image"
-	"image/color"
-	"image/draw"
-	"log"
-	"math/rand"
-	"os"
-	"strconv"
-	"github.com/as/text"
-	"time"
 )
 
 var (
@@ -59,8 +60,8 @@ func main() {
 		}
 		wind.Upload(image.ZP, b, b.Bounds())
 		sp := image.ZP
-		ed,_ := text.Open(text.NewBuffer())
-		w := win.New(sp, pad, b.RGBA(),ed, font.NewGoMono(fontdy))
+		ed, _ := text.Open(text.NewBuffer())
+		w := win.New(sp, pad, b.RGBA(), ed, font.NewFace(fontdy))
 		wind.Upload(sp, b, b.Bounds())
 		wind.Send(paint.Event{})
 
@@ -120,13 +121,6 @@ func main() {
 				q1 = q0
 				s = q0
 				if e.Button == 1 {
-					c2.Select(q0, q1)
-					redraw = true
-				}
-				ckRedraw()
-			case mous.ClickEvent:
-				switch e.Button {
-				case 1:
 					c2.Select(q0, q1)
 					redraw = true
 				}

@@ -291,7 +291,7 @@ func (c *User) Scroll(dl int) {
 			return
 		}
 		r := c.fr.Bounds()
-		org += c.fr.IndexOf(image.Pt(r.Min.X, r.Min.Y+dl*c.fr.Font.Dy()))
+		org += c.fr.IndexOf(image.Pt(r.Min.X, r.Min.Y+dl*c.fr.Face.Dy()))
 		c.SetOrigin(org, true)
 	}
 }
